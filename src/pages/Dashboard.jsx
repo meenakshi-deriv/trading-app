@@ -18,7 +18,7 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
-import axios from 'axios';
+import api from '../utils/api';
 
 function TabPanel({ children, value, index }) {
   return (
@@ -46,7 +46,7 @@ function Dashboard() {
 
   const fetchStatements = async () => {
     try {
-      const response = await axios.get('https://fs191x.buildship.run/dtrader-next/statement');
+      const response = await api.get('https://fs191x.buildship.run/dtrader-next/statement');
       setStatements(response.data);
     } catch (err) {
       console.error('Error fetching statements:', err);
@@ -62,14 +62,15 @@ function Dashboard() {
 
   const handleDeposit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     setLoading(true);
-    setError(null);
-    setSuccess(null);
 
     try {
-      await axios.post('https://fs191x.buildship.run/dtrader-next/deposit', { amount: Number(amount) });
+      const response = await api.post('https://fs191x.buildship.run/dtrader-next/deposit', {
+        amount: Number(amount)
+      });
       setSuccess('Deposit successful!');
-      setAmount('');
       fetchStatements();
     } catch (err) {
       setError(err.response?.data?.message || 'Error processing deposit');
@@ -80,14 +81,15 @@ function Dashboard() {
 
   const handleWithdraw = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     setLoading(true);
-    setError(null);
-    setSuccess(null);
 
     try {
-      await axios.post('https://fs191x.buildship.run/dtrader-next-withdraw-7782ace5e3f7', { amount: Number(amount) });
+      const response = await api.post('https://fs191x.buildship.run/dtrader-next-withdraw-7782ace5e3f7', {
+        amount: Number(amount)
+      });
       setSuccess('Withdrawal successful!');
-      setAmount('');
       fetchStatements();
     } catch (err) {
       setError(err.response?.data?.message || 'Error processing withdrawal');

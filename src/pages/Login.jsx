@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -10,7 +10,7 @@ import {
   Alert,
   CircularProgress
 } from '@mui/material';
-import axios from 'axios';
+import api from '../utils/api';
 
 function Login() {
   const navigate = useNavigate();
@@ -28,13 +28,16 @@ function Login() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
     setLoading(true);
-    setError(null);
 
     try {
-      const response = await axios.post('https://fs191x.buildship.run/dtrader-next/account', formData);
+      const response = await api.post('https://fs191x.buildship.run/dtrader-next/account', {
+        account_id: formData.accountId,
+        password: formData.password
+      });
       // Store auth token or user data if needed
       localStorage.setItem('isLoggedIn', 'true');
       navigate('/dashboard');
