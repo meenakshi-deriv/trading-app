@@ -52,11 +52,12 @@ function Register() {
         balance: response.data.balance
       });
 
-      // Store account ID and currency for login
+      // Store account ID and currency for later use
       localStorage.setItem('accountId', response.data.output.user_id);
-      localStorage.setItem('currency', formData.currency);
+      localStorage.setItem('userCurrency', formData.currency);
+      
       // Redirect to login after 2 seconds
-  
+      console.log(response.data);
       setTimeout(() => {
         navigate('/login');
       }, 2000);
