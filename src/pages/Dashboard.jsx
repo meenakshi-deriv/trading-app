@@ -67,8 +67,10 @@ function Dashboard() {
     setLoading(true);
 
     try {
+      const currency = localStorage.getItem('currency') || 'USD';
       const response = await api.post('https://fs191x.buildship.run/dtrader-next/deposit', {
-        amount: Number(amount)
+        amount: Number(amount),
+        currency: currency
       });
       setSuccess('Deposit successful!');
       fetchStatements();
@@ -86,8 +88,10 @@ function Dashboard() {
     setLoading(true);
 
     try {
+      const currency = localStorage.getItem('currency') || 'USD';
       const response = await api.post('https://fs191x.buildship.run/dtrader-next-withdraw-7782ace5e3f7', {
-        amount: Number(amount)
+        amount: Number(amount),
+        currency: currency
       });
       setSuccess('Withdrawal successful!');
       fetchStatements();

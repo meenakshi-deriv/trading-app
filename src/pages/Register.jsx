@@ -48,12 +48,15 @@ function Register() {
       });
       setSuccess({
         message: 'Registration successful!',
-        accountId: response.data.account_id,
+        accountId: response.data.output.user_id,
         balance: response.data.balance
       });
-      // Store account ID for login
-      localStorage.setItem('accountId', response.data.account_id);
+
+      // Store account ID and currency for login
+      localStorage.setItem('accountId', response.data.output.user_id);
+      localStorage.setItem('currency', formData.currency);
       // Redirect to login after 2 seconds
+  
       setTimeout(() => {
         navigate('/login');
       }, 2000);
