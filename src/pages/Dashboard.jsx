@@ -36,13 +36,36 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [statements, setStatements] = useState([]);
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
     if (!localStorage.getItem('isLoggedIn')) {
       navigate('/login');
     }
     fetchStatements();
+    fetchBalance();
   }, [navigate]);
+
+  const fetchBalance = async () => {
+    try {
+      const accountId = localStorage.getItem('accountId');
+      const response = await axios.post(
+        'https://fs191x.buildship.run/dtrader-next/balance',
+        { account_id: accountId },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6Ikd2bDBkQlBFZlRPc3o2RnciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2ljZ3Vib2xwdm54dmRrb2d5dXd0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmY2U5ZGM0Mi05YTlmLTRkNDgtYjk5Ny1lNjE3ODJmYjAyNWQiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzMzMzAzMTU4LCJpYXQiOjE3MzMyOTk1NTgsImVtYWlsIjoibWFyaW8udmFud2VzdGVuKzdAZGVyaXYuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6Im1hcmlvLnZhbndlc3Rlbis3QGRlcml2LmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiJmY2U5ZGM0Mi05YTlmLTRkNDgtYjk5Ny1lNjE3ODJmYjAyNWQifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTczMzI5OTU1OH1dLCJzZXNzaW9uX2lkIjoiNTk2NzcwYTUtMGFjOC00NmJmLTgxM2ItZmRjOTU2NmM3MmM3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.TC3M2UQnPayGqSLmbzZPImr9DLsdHadchy4dmUZLW5c'
+          }
+        }
+      );
+      console.log('Balance API Response:', response.data);
+      setBalance(response.data.balance || 0);
+    } catch (err) {
+      console.log('Balance fetch error:', err);
+      setBalance(0);
+    }
+  };
 
   const fetchStatements = async () => {
     try {
@@ -135,7 +158,12 @@ function Dashboard() {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ position: 'relative', mt: 4, mb: 4 }}>
+        <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
+          <Typography variant="h6" component="div">
+            Balance: {balance} {localStorage.getItem('userCurrency') || 'USD'}
+          </Typography>
+        </Box>
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Trading Dashboard
         </Typography>
