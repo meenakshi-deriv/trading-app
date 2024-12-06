@@ -46,6 +46,12 @@ function Register() {
         password: formData.password,
         currency: formData.currency
       });
+      
+      // Store JWT token in session storage
+      if (response.data.token) {
+        sessionStorage.setItem('jwt_token', response.data.token);
+      }
+
       setSuccess({
         message: 'Registration successful!',
         accountId: response.data.output.user_id,

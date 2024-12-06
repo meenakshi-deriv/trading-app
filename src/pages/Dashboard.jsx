@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import {
   Container,
   Paper,
@@ -47,12 +46,7 @@ function Dashboard() {
 
   const fetchStatements = async () => {
     try {
-      const response = await axios.get('https://fs191x.buildship.run/dtrader-next/statement', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEwMDAsImFwcF9pZCI6MTAwMCwiYWNjb3VudF9pZCI6MTMsImlhdCI6MTczMzM3NjgzMSwiZXhwIjoxNzY0OTEyODIyfQ.hmc1aUT_R75K1iyemngogSxVmRp2RIDxpYRLbdmw2aDuPN0o7V5dJ7lG_P38UJ0QStwyrVHs7H_S9m7XemKemBNGofL8mvMCaIOCjloWRURMdQae3VV5cBo5k3eBJdlgTBAMJjFwigHaf016iAEUF2NRJdvEqODTFyymlgxkhvvviIL8So5PN1LxWij9moaiuTj2ssK2od35U4UaVVaezZ7JNGEg83WquKlw7zzg2LYjbPhDuqiUVaAn5n4S68oS_0xgbA1JRdhZwwu6S84klcXm2HiyFBxRJ0zAcS178tUodbX8Teinx6BtAq4ld8S2IP69_ll5u24A0P-Lf859SQ'
-        }
-      });
+      const response = await api.get('https://fs191x.buildship.run/dtrader-next/statement');
       setStatements(response.data);
     } catch (err) {
       console.error('Error fetching statements:', err);
@@ -74,18 +68,12 @@ function Dashboard() {
     setLoading(true);
 
     try {
-      const currency = localStorage.getItem('currency') || 'USD';
-      const response = await axios.post(
+      const currency = localStorage.getItem('userCurrency') || 'USD';
+      const response = await api.post(
         'https://fs191x.buildship.run/dtrader-next/deposit',
         {
           amount: Number(amount),
           currency: currency
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiIxMDAwIiwiYWNjb3VudF9pZCI6MSwiZXhwIjoxNzU2MjM5MDIyfQ.srPXudzVDKY6Z79lW6186hlpLLY4VtOCp03yhzHkNcgpv4vVYfN3Kp6iQ57US_BPIMelvLqfwOD3uPA4FoADL_zRkzBm6-1WXE4RoSEwKduyfIreJjYIwM4yGbATibx0Ag1bnoGB9lyTOKYTeST4054tZyLPSSTQ-74RkklpGB08eUIqVg5KpEj0DctQFdZ2SvFNCfErKyFP9m2NyF-hvwPaRWfd0hTGnOFP0uIDV1gAi-004RGOmpgThKntI_pz6NBDR6T8hHg76dCLSfgwjGYZ6WUemjwIXS9zCbumC3jic0iJMF6c3EYFui4JNVpXPIh-cYAIQHF73bItqLapGw'
-          }
         }
       );
       setSuccess('Deposit successful!');
@@ -104,18 +92,12 @@ function Dashboard() {
     setLoading(true);
 
     try {
-      const currency = localStorage.getItem('currency') || 'USD';
-      const response = await axios.post(
+      const currency = localStorage.getItem('userCurrency') || 'USD';
+      const response = await api.post(
         'https://fs191x.buildship.run/dtrader-next-withdraw-7782ace5e3f7',
         {
           amount: Number(amount),
           currency: currency
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiIxMDAwIiwiYWNjb3VudF9pZCI6MSwiZXhwIjoxNzU2MjM5MDIyfQ.srPXudzVDKY6Z79lW6186hlpLLY4VtOCp03yhzHkNcgpv4vVYfN3Kp6iQ57US_BPIMelvLqfwOD3uPA4FoADL_zRkzBm6-1WXE4RoSEwKduyfIreJjYIwM4yGbATibx0Ag1bnoGB9lyTOKYTeST4054tZyLPSSTQ-74RkklpGB08eUIqVg5KpEj0DctQFdZ2SvFNCfErKyFP9m2NyF-hvwPaRWfd0hTGnOFP0uIDV1gAi-004RGOmpgThKntI_pz6NBDR6T8hHg76dCLSfgwjGYZ6WUemjwIXS9zCbumC3jic0iJMF6c3EYFui4JNVpXPIh-cYAIQHF73bItqLapGw'
-          }
         }
       );
       setSuccess('Withdrawal successful!');
