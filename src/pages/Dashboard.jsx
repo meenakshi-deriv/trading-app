@@ -18,7 +18,7 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
-import api from '../utils/api';
+import axios from 'axios';
 
 function TabPanel({ children, value, index }) {
   return (
@@ -46,11 +46,19 @@ function Dashboard() {
 
   const fetchStatements = async () => {
     try {
-      const response = await api.get('https://fs191x.buildship.run/dtrader-next/statement');
+      const token = sessionStorage.getItem('jwt_token');
+      console.log('Using JWT token:', token);
+      
+      const response = await axios.get('https://fs191x.buildship.run/dtrader-next/statement', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('Statement API Response:', response.data);
       setStatements(response.data);
     } catch (err) {
-      console.error('Error fetching statements:', err);
-      setError(err.response?.data?.message || 'Failed to fetch statements');
+      console.log('Statement fetch error:', err);
     }
   };
 
@@ -68,17 +76,25 @@ function Dashboard() {
     setLoading(true);
 
     try {
+      const token = sessionStorage.getItem('jwt_token');
       const currency = localStorage.getItem('userCurrency') || 'USD';
-      const response = await api.post(
+      const response = await axios.post(
         'https://fs191x.buildship.run/dtrader-next/deposit',
         {
           amount: Number(amount),
           currency: currency
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
         }
       );
       setSuccess('Deposit successful!');
       fetchStatements();
     } catch (err) {
+      console.error('Error response:', err.response?.data);
       setError(err.response?.data?.message || 'Error processing deposit');
     } finally {
       setLoading(false);
@@ -92,17 +108,25 @@ function Dashboard() {
     setLoading(true);
 
     try {
+      const token = sessionStorage.getItem('jwt_token');
       const currency = localStorage.getItem('userCurrency') || 'USD';
-      const response = await api.post(
+      const response = await axios.post(
         'https://fs191x.buildship.run/dtrader-next-withdraw-7782ace5e3f7',
         {
           amount: Number(amount),
           currency: currency
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
         }
       );
       setSuccess('Withdrawal successful!');
       fetchStatements();
     } catch (err) {
+      console.error('Error response:', err.response?.data);
       setError(err.response?.data?.message || 'Error processing withdrawal');
     } finally {
       setLoading(false);
