@@ -134,7 +134,7 @@ function Dashboard() {
       const token = sessionStorage.getItem('jwt_token');
       const currency = localStorage.getItem('userCurrency') || 'USD';
       const response = await axios.post(
-        'https://fs191x.buildship.run/dtrader-next-withdraw-7782ace5e3f7',
+        'https://fs191x.buildship.run/dtrader-next/withdraw',
         {
           amount: Number(amount),
           currency: currency
